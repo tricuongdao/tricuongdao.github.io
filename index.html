@@ -66,6 +66,7 @@
   }
 
   @media (max-width: 768px){
+    #pf-root{display:flex;flex-direction:column;}
     .pf-topbar{padding:10px 12px!important;font-size:10px!important;letter-spacing:0.12em!important;gap:8px;}
     .pf-topbar-clock{display:none;}
     .pf-side-nav{display:none!important;}
@@ -80,7 +81,9 @@
     .pf-glyph{display:none!important;}
     .pf-scroll-cue{display:none!important;}
 
-    .pf-marquee-text{font-size:11px!important;letter-spacing:0.14em!important;padding:12px 0!important;}
+    .pf-anim-marquee{animation-duration:56s!important;}
+    .pf-marquee-wrap{order:99;}
+    .pf-marquee-text{font-size:12px!important;letter-spacing:0.1em!important;padding:14px 0!important;}
     .pf-grid{grid-template-columns:1fr!important;gap:26px!important;}
     .pf-project-item{grid-template-columns:1fr!important;gap:12px!important;padding:24px 10px!important;}
     .pf-proj-arrow{display:none;}
@@ -93,6 +96,13 @@
     .pf-section{padding:62px 14px;}
     .pf-contact{padding:72px 14px 44px!important;}
     .pf-contact-email{font-size:clamp(28px,12vw,44px);}
+    .pf-anim-marquee{animation-duration:68s!important;}
+    .pf-marquee-text{font-size:11px!important;letter-spacing:0.08em!important;}
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    .pf-anim-marquee{animation:none!important;}
+    .pf-anim-blink,.pf-anim-scroll-cue{animation:none!important;opacity:1!important;}
   }
 </style>
 </helmet>
@@ -163,7 +173,7 @@
   </section>
 
   <!-- MARQUEE TICKER -->
-  <div style="border-top:1px solid var(--line);border-bottom:1px solid var(--line);overflow:hidden;white-space:nowrap;background:#050505;">
+  <div class="pf-marquee-wrap" style="border-top:1px solid var(--line);border-bottom:1px solid var(--line);overflow:hidden;white-space:nowrap;background:#050505;">
     <div class="pf-anim-marquee">
       <sc-for list="{{ marqueeRows }}" as="row" hint-placeholder-count="2">
         <span class="pf-marquee-text" style="font-family:'Space Mono',monospace;font-size:13px;letter-spacing:0.2em;text-transform:uppercase;color:var(--muted);padding:16px 0;">
