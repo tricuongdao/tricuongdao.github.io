@@ -1,0 +1,635 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.runtime-core.js"></script>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Doto:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@300;400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  /* Base */
+  *{box-sizing:border-box;margin:0;padding:0;}
+  html{scroll-behavior:smooth;}
+  body{background:#000;}
+  :root{--accent:#D71921;--line:rgba(255,255,255,0.12);--muted:#8a8a8a;--dim:#5a5a5a;}
+  #pf-root::-webkit-scrollbar{width:0;}
+  ::selection{background:var(--accent);color:#fff;}
+
+  /* Animation keyframes */
+  @keyframes pf-blink{0%,49%{opacity:1;}50%,100%{opacity:0.15;}}
+  @keyframes pf-pulse{0%,100%{opacity:0.18;transform:scale(0.85);}50%{opacity:1;transform:scale(1);}}
+  @keyframes pf-reveal{from{opacity:0;transform:translateY(26px);}to{opacity:1;transform:translateY(0);}}
+  @keyframes pf-marquee{from{transform:translateX(0);}to{transform:translateX(-50%);}}
+  @keyframes pf-float{0%,100%{transform:translateY(0);}50%{transform:translateY(-8px);}}
+  @keyframes pf-spin{to{transform:rotate(360deg);}}
+  @keyframes pf-scroll-cue{0%{transform:translateY(0);opacity:0;}30%{opacity:1;}60%{opacity:1;}100%{transform:translateY(14px);opacity:0;}}
+
+  /* Shared design tokens */
+  .pf-section{padding:110px 6vw;border-bottom:1px solid var(--line);}
+  .pf-section-head{display:flex;align-items:baseline;gap:18px;margin-bottom:50px;}
+  .pf-section-head--compact{margin-bottom:30px;}
+  .pf-section-head--contact{margin-bottom:40px;}
+  .pf-section-num{font-family:'Doto',monospace;font-weight:700;font-size:18px;color:var(--accent);}
+  .pf-section-title{font-size:clamp(28px,5vw,52px);font-weight:500;letter-spacing:-0.02em;}
+  .pf-block-tag{font-family:'Space Mono',monospace;font-size:11px;letter-spacing:0.2em;text-transform:uppercase;color:var(--accent);margin-bottom:24px;}
+
+  /* Animation utility classes */
+  .pf-anim-blink{animation:pf-blink 2s infinite;}
+  .pf-anim-marquee{display:inline-flex;animation:pf-marquee 28s linear infinite;will-change:transform;}
+  .pf-anim-scroll-cue{animation:pf-scroll-cue 1.8s infinite;}
+
+  /* Component styles */
+  .pf-grain{position:fixed;inset:0;pointer-events:none;z-index:90;opacity:0.04;mix-blend-mode:screen;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");}
+  .pf-contact-email{font-family:'Doto',monospace;font-weight:800;font-size:clamp(34px,8vw,110px);line-height:0.9;letter-spacing:-0.01em;transition:color .3s;}
+  .pf-proj:hover .pf-proj-num{color:var(--accent);}
+  .pf-proj:hover .pf-proj-arrow{transform:translate(4px,-4px);color:var(--accent);}
+  .pf-proj:hover{background:#0a0a0a;}
+  .pf-link{transition:color .25s,padding .25s;}
+  .pf-link:hover{color:#fff;padding-left:6px;}
+  .pf-link:hover .pf-link-dot{background:#2ec36a;}
+  .pf-contact-email:hover{color:var(--accent);}
+  .pf-navdot:hover{transform:scale(1.6);background:var(--accent)!important;}
+  .pf-cta:hover{background:var(--accent);color:#000;border-color:var(--accent);}
+  .pf-cta:hover .pf-cta-dot{background:#000;}
+  .pf-skill:hover{border-color:var(--accent);color:#fff;}
+</style>
+</helmet>
+
+<div id="pf-root" style="position:relative;min-height:100vh;background:#000;color:#fff;font-family:'Space Grotesk',sans-serif;overflow-x:hidden;-webkit-font-smoothing:antialiased;">
+
+  <div class="pf-grain" data-grain></div>
+
+  <!-- TOP STATUS BAR -->
+  <div style="position:fixed;top:0;left:0;right:0;z-index:80;display:flex;align-items:center;justify-content:space-between;padding:14px 22px;background:linear-gradient(#000,rgba(0,0,0,0.6),transparent);font-family:'Space Mono',monospace;font-size:11px;letter-spacing:0.22em;text-transform:uppercase;color:var(--muted);">
+    <div style="display:flex;align-items:center;gap:8px;"><span style="width:6px;height:6px;border-radius:50%;background:var(--accent);display:inline-block;"></span><span style="color:#fff;">{{ brand.name }}</span><span style="color:var(--dim);">{{ brand.tagline }}</span></div>
+    <div id="pf-clock" style="color:var(--dim);">--:--:-- AEST</div>
+    <div style="display:flex;align-items:center;gap:8px;"><span class="pf-anim-blink" style="width:6px;height:6px;border-radius:50%;background:#2ec36a;display:inline-block;"></span>{{ availabilityText }}</div>
+  </div>
+
+  <!-- SIDE NAV DOTS -->
+  <div style="position:fixed;right:20px;top:50%;transform:translateY(-50%);z-index:80;display:flex;flex-direction:column;gap:16px;align-items:center;">
+    <sc-for list="{{ nav }}" as="n" hint-placeholder-count="6">
+      <div class="pf-navdot" onClick="{{ n.go }}" title="{{ n.label }}" style="width:8px;height:8px;border-radius:50%;background:#333;cursor:pointer;transition:transform .2s,background .2s;" data-navdot="{{ n.id }}"></div>
+    </sc-for>
+  </div>
+
+  <!-- ============ HERO ============ -->
+  <section id="home" data-screen-label="Hero" style="position:relative;min-height:100vh;display:flex;flex-direction:column;justify-content:center;padding:0 6vw;">
+    <!-- ambient dot field -->
+    <div style="position:absolute;inset:0;background-image:radial-gradient(circle,rgba(255,255,255,0.07) 1px,transparent 1px);background-size:26px 26px;mask-image:radial-gradient(circle at 70% 40%,#000,transparent 75%);-webkit-mask-image:radial-gradient(circle at 70% 40%,#000,transparent 75%);"></div>
+
+    <div style="position:relative;z-index:2;max-width:1100px;">
+      <div style="display:flex;align-items:center;gap:14px;margin-bottom:26px;font-family:'Space Mono',monospace;font-size:12px;letter-spacing:0.28em;text-transform:uppercase;color:var(--muted);" data-reveal>
+        <span style="width:34px;height:1px;background:var(--accent);display:inline-block;"></span>
+        {{ hero.kicker }}
+      </div>
+
+      <h1 style="font-family:'Doto',monospace;font-weight:900;font-size:clamp(56px,13vw,190px);line-height:0.82;letter-spacing:-0.01em;margin:0;" data-reveal>
+        {{ hero.firstName }}<br><span style="color:transparent;-webkit-text-stroke:2px #fff;">{{ hero.lastName }}</span>
+      </h1>
+
+      <p style="margin-top:30px;max-width:540px;font-size:clamp(15px,1.6vw,19px);line-height:1.55;color:#cfcfcf;font-weight:300;" data-reveal>
+        {{ hero.summary }}
+      </p>
+
+      <div style="margin-top:40px;display:flex;flex-wrap:wrap;gap:14px;align-items:center;" data-reveal>
+        <div class="pf-cta" onClick="{{ goContact }}" style="display:flex;align-items:center;gap:10px;padding:14px 22px;border:1px solid #fff;border-radius:40px;font-size:13px;letter-spacing:0.12em;text-transform:uppercase;cursor:pointer;transition:all .25s;font-weight:500;">
+          <span class="pf-cta-dot" style="width:7px;height:7px;border-radius:50%;background:var(--accent);transition:background .25s;"></span> {{ hero.primaryCta }}
+        </div>
+        <div class="pf-cta" onClick="{{ goWork }}" style="display:flex;align-items:center;gap:10px;padding:14px 22px;border:1px solid var(--line);border-radius:40px;font-size:13px;letter-spacing:0.12em;text-transform:uppercase;cursor:pointer;transition:all .25s;color:var(--muted);">
+          {{ hero.secondaryCta }}
+        </div>
+      </div>
+    </div>
+
+    <!-- glyph matrix -->
+    <div style="position:absolute;right:6vw;top:50%;transform:translateY(-50%);z-index:1;display:flex;flex-direction:column;gap:7px;opacity:0.9;" data-glyph>
+      <sc-for list="{{ glyphRows }}" as="row" hint-placeholder-count="7">
+        <div style="display:flex;gap:7px;">
+          <sc-for list="{{ row }}" as="d" hint-placeholder-count="33">
+            <span class="glyph-dot" style="width:6px;height:6px;border-radius:50%;background:#fff;opacity:0.16;"></span>
+          </sc-for>
+        </div>
+      </sc-for>
+    </div>
+
+    <!-- scroll cue -->
+    <div style="position:absolute;bottom:26px;left:6vw;display:flex;align-items:center;gap:12px;font-family:'Space Mono',monospace;font-size:11px;letter-spacing:0.22em;color:var(--dim);">
+      <div style="width:18px;height:30px;border:1px solid var(--line);border-radius:10px;position:relative;"><span class="pf-anim-scroll-cue" style="position:absolute;left:50%;top:6px;width:3px;height:3px;border-radius:50%;background:var(--accent);transform:translateX(-50%);"></span></div>
+      SCROLL
+    </div>
+  </section>
+
+  <!-- MARQUEE TICKER -->
+  <div style="border-top:1px solid var(--line);border-bottom:1px solid var(--line);overflow:hidden;white-space:nowrap;background:#050505;">
+    <div class="pf-anim-marquee">
+      <sc-for list="{{ marqueeRows }}" as="row" hint-placeholder-count="2">
+        <span style="font-family:'Space Mono',monospace;font-size:13px;letter-spacing:0.2em;text-transform:uppercase;color:var(--muted);padding:16px 0;">
+          <sc-for list="{{ row }}" as="token" hint-placeholder-count="8">
+            &nbsp;&nbsp;{{ token }}&nbsp;&nbsp;<span style="color:var(--accent);">●</span>
+          </sc-for>
+          &nbsp;&nbsp;
+        </span>
+      </sc-for>
+    </div>
+  </div>
+
+  <!-- ============ ABOUT ============ -->
+  <section id="about" data-screen-label="About" class="pf-section">
+    <div class="pf-section-head" data-reveal>
+      <span class="pf-section-num">{{ sectionById.about.num }}</span>
+      <h2 class="pf-section-title">{{ sectionById.about.title }}</h2>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:50px;align-items:start;">
+      <div data-reveal>
+        <p style="font-size:clamp(18px,2.4vw,28px);line-height:1.5;font-weight:300;letter-spacing:-0.01em;">{{ about.lead }}</p>
+        <p style="margin-top:24px;max-width:560px;font-size:16px;line-height:1.7;color:#bdbdbd;font-weight:300;">{{ about.body }}</p>
+      </div>
+      <div data-reveal style="font-family:'Space Mono',monospace;font-size:13px;">
+        <div style="border-top:1px solid var(--line);"></div>
+        <sc-for list="{{ facts }}" as="f" hint-placeholder-count="5">
+          <div style="display:flex;justify-content:space-between;gap:16px;padding:16px 0;border-bottom:1px solid var(--line);">
+            <span style="color:var(--dim);letter-spacing:0.12em;text-transform:uppercase;">{{ f.k }}</span>
+            <span style="color:#fff;text-align:right;">{{ f.v }}</span>
+          </div>
+        </sc-for>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ SKILLS ============ -->
+  <section id="skills" data-screen-label="Skills" class="pf-section">
+    <div class="pf-section-head" data-reveal>
+      <span class="pf-section-num">{{ sectionById.skills.num }}</span>
+      <h2 class="pf-section-title">{{ sectionById.skills.title }}</h2>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:40px;">
+      <sc-for list="{{ skillGroups }}" as="g" hint-placeholder-count="3">
+        <div data-reveal>
+          <div class="pf-block-tag" style="margin-bottom:20px;">{{ g.title }}</div>
+          <div style="display:flex;flex-wrap:wrap;gap:10px;">
+            <sc-for list="{{ g.items }}" as="it" hint-placeholder-count="6">
+              <span class="pf-skill" style="padding:9px 15px;border:1px solid var(--line);border-radius:30px;font-size:14px;color:#d6d6d6;transition:border-color .2s,color .2s;cursor:default;">{{ it }}</span>
+            </sc-for>
+          </div>
+        </div>
+      </sc-for>
+    </div>
+  </section>
+
+  <!-- ============ PROJECTS ============ -->
+  <section id="work" data-screen-label="Projects" class="pf-section">
+    <div class="pf-section-head pf-section-head--compact" data-reveal>
+      <span class="pf-section-num">{{ sectionById.work.num }}</span>
+      <h2 class="pf-section-title">{{ sectionById.work.title }}</h2>
+    </div>
+    <div style="border-top:1px solid var(--line);">
+      <sc-for list="{{ projects }}" as="p" hint-placeholder-count="4">
+        <a href="{{ p.href }}" target="_blank" rel="noopener noreferrer" class="pf-proj" data-reveal style="text-decoration:none;color:inherit;display:grid;grid-template-columns:80px 1fr auto;gap:24px;align-items:center;padding:34px 18px;border-bottom:1px solid var(--line);transition:background .3s;">
+          <div class="pf-proj-num" style="font-family:'Doto',monospace;font-weight:700;font-size:30px;color:var(--dim);transition:color .3s;">{{ p.num }}</div>
+          <div>
+            <div style="display:flex;align-items:center;gap:14px;flex-wrap:wrap;">
+              <h3 style="font-size:clamp(22px,3vw,34px);font-weight:500;letter-spacing:-0.01em;">{{ p.title }}</h3>
+              <span style="font-family:'Space Mono',monospace;font-size:11px;letter-spacing:0.15em;text-transform:uppercase;color:var(--accent);border:1px solid var(--accent);border-radius:20px;padding:3px 10px;">{{ p.tag }}</span>
+            </div>
+            <p style="margin-top:10px;max-width:620px;font-size:15px;line-height:1.6;color:#a8a8a8;font-weight:300;">{{ p.desc }}</p>
+            <div style="margin-top:14px;font-family:'Space Mono',monospace;font-size:12px;letter-spacing:0.08em;color:var(--dim);">{{ p.stack }}</div>
+          </div>
+          <div class="pf-proj-arrow" style="font-size:28px;color:var(--dim);transition:transform .3s,color .3s;align-self:start;">↗</div>
+        </a>
+      </sc-for>
+    </div>
+  </section>
+
+  <!-- ============ EXPERIENCE / EDU ============ -->
+  <section id="path" data-screen-label="Experience" class="pf-section">
+    <div class="pf-section-head" data-reveal>
+      <span class="pf-section-num">{{ sectionById.path.num }}</span>
+      <h2 class="pf-section-title">{{ sectionById.path.title }}</h2>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:60px;">
+      <div data-reveal>
+        <div class="pf-block-tag">Experience</div>
+        <sc-for list="{{ experience }}" as="e" hint-placeholder-count="3">
+          <div style="position:relative;padding-left:24px;padding-bottom:30px;border-left:1px solid var(--line);">
+            <span style="position:absolute;left:-5px;top:4px;width:9px;height:9px;border-radius:50%;background:var(--accent);"></span>
+            <div style="font-family:'Space Mono',monospace;font-size:11px;color:var(--dim);letter-spacing:0.1em;">{{ e.date }}</div>
+            <div style="font-size:18px;font-weight:500;margin-top:4px;">{{ e.role }}</div>
+            <div style="font-size:14px;color:var(--muted);">{{ e.org }}</div>
+            <p style="margin-top:8px;font-size:14px;line-height:1.6;color:#9a9a9a;font-weight:300;white-space:pre-line;">{{ e.note }}</p>
+          </div>
+        </sc-for>
+      </div>
+      <div data-reveal>
+        <div class="pf-block-tag">Education & Certs</div>
+        <sc-for list="{{ education }}" as="ed" hint-placeholder-count="4">
+          <div style="position:relative;padding-left:24px;padding-bottom:30px;border-left:1px solid var(--line);">
+            <span style="position:absolute;left:-5px;top:4px;width:9px;height:9px;border-radius:50%;background:#fff;"></span>
+            <div style="font-family:'Space Mono',monospace;font-size:11px;color:var(--dim);letter-spacing:0.1em;">{{ ed.date }}</div>
+            <div style="font-size:18px;font-weight:500;margin-top:4px;">{{ ed.title }}</div>
+            <div style="font-size:14px;color:var(--muted);">{{ ed.org }}</div>
+          </div>
+        </sc-for>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ CONTACT ============ -->
+  <section id="contact" data-screen-label="Contact" style="padding:120px 6vw 60px;">
+    <div class="pf-section-head pf-section-head--contact" data-reveal>
+      <span class="pf-section-num">{{ sectionById.contact.num }}</span>
+      <h2 class="pf-section-title">{{ sectionById.contact.title }}</h2>
+    </div>
+    <a href="mailto:{{ contact.email }}" style="text-decoration:none;color:inherit;display:block;" data-reveal>
+      <div class="pf-contact-email">{{ contact.emailUser }}<br>{{ contact.emailDomain }}</div>
+    </a>
+
+    <div style="margin-top:60px;display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:14px;max-width:760px;" data-reveal>
+      <sc-for list="{{ links }}" as="l" hint-placeholder-count="3">
+        <a href="{{ l.href }}" target="_blank" class="pf-link" style="text-decoration:none;color:var(--muted);display:flex;align-items:center;gap:12px;padding:18px 20px;border:1px solid var(--line);border-radius:14px;">
+          <span class="pf-link-dot" style="width:7px;height:7px;border-radius:50%;background:#2ec36a;transition:background .25s;"></span>
+          <span style="font-family:'Space Mono',monospace;font-size:13px;letter-spacing:0.1em;text-transform:uppercase;">{{ l.label }}</span>
+          <span style="margin-left:auto;">↗</span>
+        </a>
+      </sc-for>
+    </div>
+
+    <div style="margin-top:80px;padding-top:24px;border-top:1px solid var(--line);display:flex;flex-wrap:wrap;justify-content:space-between;gap:14px;font-family:'Space Mono',monospace;font-size:11px;letter-spacing:0.16em;text-transform:uppercase;color:var(--dim);">
+      <span>© {{ year }} {{ footer.owner }}</span>
+      <span>{{ footer.middle }}</span>
+      <span style="color:var(--muted);">{{ footer.status }}</span>
+    </div>
+  </section>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;accentColor&quot;:{&quot;editor&quot;:&quot;color&quot;,&quot;default&quot;:&quot;#D71921&quot;,&quot;options&quot;:[&quot;#D71921&quot;,&quot;#FFFFFF&quot;,&quot;#FF5A1F&quot;,&quot;#C6FF00&quot;],&quot;tsType&quot;:&quot;string&quot;},&quot;glyphActive&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;},&quot;grain&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;}}">
+const toArray = (value) => Array.isArray(value) ? value : [];
+const toObject = (value) => (value && typeof value === 'object') ? value : {};
+const toText = (value, fallback = '') => typeof value === 'string' ? value : fallback;
+const pad2 = (value) => String(value).padStart(2, '0');
+
+const DEFAULT_SECTIONS = [
+  { id: 'home', label: 'Home', title: 'Hero', num: '' },
+  { id: 'about', label: 'About', title: 'About', num: '01' },
+  { id: 'skills', label: 'Stack', title: 'Stack', num: '02' },
+  { id: 'work', label: 'Work', title: 'Selected Work', num: '03' },
+  { id: 'path', label: 'Timeline', title: 'Timeline', num: '04' },
+  { id: 'contact', label: 'Contact', title: "Let's build", num: '05' },
+];
+
+const PAGE_CONTENT = {
+  brand: {
+    name: 'V.DAO',
+    tagline: '/PORTFOLIO',
+  },
+  availabilityText: 'AVAILABLE FOR WORK',
+  hero: {
+    kicker: 'IT STUDENT · FULL-STACK & CLOUD',
+    firstName: 'VINNY',
+    lastName: 'DAO',
+    summary: "Final-year Information Technology student building reliable, cloud-native systems. I turn messy infrastructure into clean, automated pipelines — and I'm ready to do it on your team.",
+    primaryCta: 'Get in touch',
+    secondaryCta: 'View work ↓',
+  },
+  sections: DEFAULT_SECTIONS,
+  marqueeKeywords: ['Python', 'JavaScript', 'TypeScript', 'Java', 'SQL', 'Bash', 'AWS', 'CI/CD', 'React', 'Node.js', 'PostgreSQL', 'REST', 'GraphQL', 'Git'],
+  about: {
+    lead: 'Detail-oriented Information Technology student with hands-on experience building full-stack applications using React, Node.js, and modern web technologies.',
+    body: 'Combines strong technical foundations in Python, JavaScript, and cloud tools (AWS, Git) with proven professional skills in document management, organisation, and client communication developed as a Legal Secretary. Adept at managing deadlines, coordinating across teams, and delivering accurate, well-structured work in fast-paced environments.',
+  },
+  stats: [],
+  facts: [
+    { k: 'Location', v: 'Remote / Brisbane' },
+    { k: 'Focus', v: 'Cloud · WebDev' },
+    { k: 'Status', v: 'Graduating 2027' },
+    { k: 'Open to', v: 'Junior / Intern' },
+    { k: 'Languages', v: 'EN · VI' },
+  ],
+  skillGroups: [
+    { title: 'Languages', items: ['Python', 'JavaScript', 'TypeScript', 'Java', 'SQL', 'Bash'] },
+    { title: 'Cloud & DevOps', items: ['AWS', 'CI/CD' ] },
+    { title: 'Web & Data', items: ['React', 'Node.js', 'PostgreSQL', 'REST', 'GraphQL', 'Git' ] },
+  ],
+  projects: [
+    { num: '01', title: 'Flow Mate', tag: 'Full-stack', desc: 'Full-stack task management app with CRUD flows, status and time-based filtering, pagination, and a responsive UI for daily planning.', stack: 'React · Vite · Tailwind CSS · Node.js · Express · MongoDB · Mongoose', href: 'https://github.com/tricuongdao/Flow_Mate' },
+    { num: '02', title: 'Coming Soon', tag: 'Coming Soon', desc: 'Coming Soon', stack: 'Coming Soon', href: 'Coming Soon' },
+  ],
+  experience: [
+    { date: 'FEBRUARY 2025 — PRESENT', role: 'Legal Secretary', org: 'T Lawyers, Inala, Brisbane QLD', note: '• Drafted and formatted legal correspondence, pleadings, and documents with high accuracy.\n• Managed file organisation, diarising, and matter deadlines across concurrent cases.\n• Liaised with clients, counsel, and courts for timely case progression.\n• Prepared costing and billing while maintaining accurate financial records.\n• Handled document conversion and record-keeping in line with legal compliance standards.\n• Coordinated property settlement documentation to meet all deadlines.' },
+  ],
+  education: [
+    { date: '2024 — 2027', title: 'Bachelor of Information Technology', org: 'Queensland University of Technology (QUT)' },
+  ],
+  links: [
+    { label: 'GitHub', href: 'https://github.com/tricuongdao' },
+    { label: 'LinkedIn', href: 'www.linkedin.com/in/tri-cuong-dao' },
+    { label: 'Download CV', href: '#' },
+  ],
+  contact: {
+    email: 'tricuongdao75@gmail.com',
+  },
+  footer: {
+    owner: 'VINNY DAO',
+    middle: 'DESIGNED IN THE DARK · NOTHING-INSPIRED',
+    status: 'OPEN TO OPPORTUNITIES',
+  },
+};
+
+class Component extends DCLogic {
+  renderVals() {
+    const COLS = 33, ROWS = 7;
+    const glyphRows = [];
+    for (let r = 0; r < ROWS; r++) {
+      const row = [];
+      for (let c = 0; c < COLS; c++) row.push({ r, c });
+      glyphRows.push(row);
+    }
+    const scrollTo = (id) => {
+      const el = document.getElementById(id);
+      if (!el) return;
+      const top = el.getBoundingClientRect().top + window.scrollY - 10;
+      window.scrollTo({ top, behavior: 'smooth' });
+    };
+
+    const sectionOverrides = toArray(PAGE_CONTENT.sections)
+      .map(toObject)
+      .reduce((acc, section) => {
+        const id = toText(section.id, '').trim();
+        if (!id) return acc;
+        acc[id] = section;
+        return acc;
+      }, {});
+
+    const sections = DEFAULT_SECTIONS.map((fallback) => {
+      const override = sectionOverrides[fallback.id] || {};
+      return {
+        id: fallback.id,
+        label: toText(override.label, fallback.label),
+        title: toText(override.title, fallback.title),
+        num: toText(override.num, fallback.num),
+      };
+    });
+
+    const sectionById = sections.reduce((acc, section) => {
+      acc[section.id] = section;
+      return acc;
+    }, {});
+
+    const hero = toObject(PAGE_CONTENT.hero);
+    const about = toObject(PAGE_CONTENT.about);
+    const brand = toObject(PAGE_CONTENT.brand);
+    const footer = toObject(PAGE_CONTENT.footer);
+    const contactConfig = toObject(PAGE_CONTENT.contact);
+    const email = toText(contactConfig.email, 'alex.novak@example.com').trim() || 'alex.novak@example.com';
+    const emailParts = email.split('@');
+    const emailUser = emailParts.shift() || email;
+    const emailDomain = emailParts.length ? `@${emailParts.join('@')}` : '';
+
+    const marqueeKeywords = toArray(PAGE_CONTENT.marqueeKeywords)
+      .map((keyword) => toText(keyword).trim())
+      .filter(Boolean);
+    const marqueeRows = marqueeKeywords.length ? [marqueeKeywords, marqueeKeywords] : [[], []];
+
+    const stats = toArray(PAGE_CONTENT.stats).map((item) => {
+      const stat = toObject(item);
+      return {
+        value: Number.isFinite(Number(stat.value)) ? Number(stat.value) : 0,
+        suffix: toText(stat.suffix, ''),
+        label: toText(stat.label, ''),
+      };
+    });
+
+    const facts = toArray(PAGE_CONTENT.facts).map((item) => {
+      const fact = toObject(item);
+      return {
+        k: toText(fact.k, ''),
+        v: toText(fact.v, ''),
+      };
+    });
+
+    const skillGroups = toArray(PAGE_CONTENT.skillGroups).map((item) => {
+      const group = toObject(item);
+      return {
+        title: toText(group.title, ''),
+        items: toArray(group.items).map((value) => toText(value, '')).filter(Boolean),
+      };
+    });
+
+    const projects = toArray(PAGE_CONTENT.projects).map((item, index) => {
+      const project = toObject(item);
+      return {
+        num: toText(project.num, pad2(index + 1)),
+        title: toText(project.title, ''),
+        tag: toText(project.tag, ''),
+        desc: toText(project.desc, ''),
+        stack: toText(project.stack, ''),
+        href: toText(project.href, '#').trim() || '#',
+      };
+    });
+
+    const experience = toArray(PAGE_CONTENT.experience).map((item) => {
+      const row = toObject(item);
+      return {
+        date: toText(row.date, ''),
+        role: toText(row.role, ''),
+        org: toText(row.org, ''),
+        note: toText(row.note, ''),
+      };
+    });
+
+    const education = toArray(PAGE_CONTENT.education).map((item) => {
+      const row = toObject(item);
+      return {
+        date: toText(row.date, ''),
+        title: toText(row.title, ''),
+        org: toText(row.org, ''),
+      };
+    });
+
+    const links = toArray(PAGE_CONTENT.links).map((item) => {
+      const link = toObject(item);
+      return {
+        label: toText(link.label, ''),
+        href: toText(link.href, '#'),
+      };
+    });
+
+    return {
+      glyphRows,
+      year: new Date().getFullYear(),
+      goContact: () => scrollTo('contact'),
+      goWork: () => scrollTo('work'),
+      nav: sections.map((n) => ({ ...n, go: () => scrollTo(n.id) })),
+      sectionById,
+      brand: {
+        name: toText(brand.name, 'V.DAO'),
+        tagline: toText(brand.tagline, '/PORTFOLIO'),
+      },
+      availabilityText: toText(PAGE_CONTENT.availabilityText, 'AVAILABLE FOR WORK'),
+      hero: {
+        kicker: toText(hero.kicker, ''),
+        firstName: toText(hero.firstName, ''),
+        lastName: toText(hero.lastName, ''),
+        summary: toText(hero.summary, ''),
+        primaryCta: toText(hero.primaryCta, 'Get in touch'),
+        secondaryCta: toText(hero.secondaryCta, 'View work ↓'),
+      },
+      marqueeRows,
+      about: {
+        lead: toText(about.lead, ''),
+        body: toText(about.body, ''),
+      },
+      stats,
+      facts,
+      skillGroups,
+      projects,
+      experience,
+      education,
+      links,
+      contact: {
+        email,
+        emailUser,
+        emailDomain,
+      },
+      footer: {
+        owner: toText(footer.owner, 'VINNY DAO'),
+        middle: toText(footer.middle, ''),
+        status: toText(footer.status, ''),
+      },
+    };
+  }
+
+  componentDidMount() {
+    const root = document.getElementById('pf-root');
+    // accent
+    const acc = this.props.accentColor;
+    if (acc) document.documentElement.style.setProperty('--accent', acc);
+    // grain toggle
+    if (this.props.grain === false) {
+      const g = root && root.querySelector('[data-grain]');
+      if (g) g.style.display = 'none';
+    }
+
+    // live clock (Brisbane)
+    const clock = document.getElementById('pf-clock');
+    const brisbaneTimeFormatter = new Intl.DateTimeFormat('en-AU', {
+      timeZone: 'Australia/Brisbane',
+      hour: '2-digit',
+      minute: '2-digit',
+      second: '2-digit',
+      hour12: false,
+    });
+    const tick = () => {
+      if (!clock) return;
+      clock.textContent = `${brisbaneTimeFormatter.format(new Date())} AEST`;
+    };
+    tick();
+    this._clock = setInterval(tick, 1000);
+
+    // glyph wave animation
+    const glyphOn = this.props.glyphActive !== false;
+    const dots = root ? root.querySelectorAll('.glyph-dot') : [];
+    const COLS = 33;
+    dots.forEach((dot, i) => {
+      const col = i % COLS, row = Math.floor(i / COLS);
+      if (glyphOn) {
+        const delay = (col * 0.05 + row * 0.08).toFixed(2);
+        dot.style.animation = `pf-pulse 2.4s ease-in-out ${delay}s infinite`;
+      }
+    });
+
+    // counter animation
+    const animateCount = (el) => {
+      if (el._counted) return;
+      el._counted = true;
+      const target = parseFloat(el.getAttribute('data-to')) || 0;
+      el.textContent = target; // guaranteed baseline
+      const dur = 1400, start = Date.now();
+      const id = setInterval(() => {
+        const t = Math.min(1, (Date.now() - start) / dur);
+        const eased = 1 - Math.pow(1 - t, 3);
+        el.textContent = Math.round(eased * target);
+        if (t >= 1) { el.textContent = target; clearInterval(id); }
+      }, 33);
+    };
+
+    // scroll reveals (scroll-driven, no IntersectionObserver dependency)
+    const reveals = Array.from(root ? root.querySelectorAll('[data-reveal]') : []);
+    reveals.forEach(el => { el.style.opacity = '0'; });
+    const reveal = (el) => {
+      if (el._shown) return;
+      el._shown = true;
+      // drive the fade with a keyframe animation (independent of transition
+      // baseline, which gets stuck in some preview engines) + instant fallback
+      el.style.transition = 'none';
+      el.style.opacity = '1';
+      el.style.transform = 'none';
+      el.style.animation = 'pf-reveal .7s cubic-bezier(.2,.7,.2,1) both';
+      el.querySelectorAll && el.querySelectorAll('.pf-stat').forEach(animateCount);
+      if (el.classList && el.classList.contains('pf-stat')) animateCount(el);
+    };
+
+    const sections = Array.from(root ? root.querySelectorAll('section[id]') : []);
+    const navDots = Array.from(root ? root.querySelectorAll('[data-navdot]') : []);
+    const setActive = (id) => {
+      navDots.forEach(d => {
+        const on = d.getAttribute('data-navdot') === id;
+        d.style.background = on ? 'var(--accent)' : '#333';
+        d.style.transform = on ? 'scale(1.5)' : 'scale(1)';
+      });
+    };
+
+    const onScroll = () => {
+      const vh = window.innerHeight;
+      reveals.forEach(el => {
+        if (el._shown) return;
+        const r = el.getBoundingClientRect();
+        if (r.top < vh * 0.9 && r.bottom > 0) reveal(el);
+      });
+      // active section = closest to top third
+      let active = sections[0] && sections[0].id;
+      for (const s of sections) {
+        const r = s.getBoundingClientRect();
+        if (r.top <= vh * 0.4) active = s.id;
+      }
+      if (active) setActive(active);
+    };
+    // commit the opacity:0 baseline before revealing, so the transition runs
+    void root.offsetHeight;
+    requestAnimationFrame(() => requestAnimationFrame(onScroll));
+    window.addEventListener('scroll', onScroll, { passive: true });
+    window.addEventListener('resize', onScroll);
+    this._onScroll = onScroll;
+    // safety net: force everything visible without a transition in case
+    // rAF/scroll-driven reveals never fire (some preview/headless environments)
+    this._safety = setTimeout(() => {
+      reveals.forEach(el => {
+        if (el._shown) return;
+        el._shown = true;
+        el.style.transition = 'none';
+        el.style.opacity = '1';
+        el.style.transform = 'none';
+        el.querySelectorAll && el.querySelectorAll('.pf-stat').forEach(animateCount);
+      });
+    }, 700);
+  }
+
+  componentWillUnmount() {
+    clearInterval(this._clock);
+    clearTimeout(this._safety);
+    if (this._onScroll) {
+      window.removeEventListener('scroll', this._onScroll);
+      window.removeEventListener('resize', this._onScroll);
+    }
+  }
+}
+</script>
+</body>
+</html>
