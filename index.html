@@ -58,6 +58,42 @@
   .pf-cta:hover{background:var(--accent);color:#000;border-color:var(--accent);}
   .pf-cta:hover .pf-cta-dot{background:#000;}
   .pf-skill:hover{border-color:var(--accent);color:#fff;}
+
+  /* Responsive */
+  @media (max-width: 1024px){
+    .pf-section{padding:88px 5vw;}
+    .pf-hero-title{font-size:clamp(52px,12vw,120px)!important;}
+  }
+
+  @media (max-width: 768px){
+    .pf-topbar{padding:10px 12px!important;font-size:10px!important;letter-spacing:0.12em!important;gap:8px;}
+    .pf-topbar-clock{display:none;}
+    .pf-side-nav{display:none!important;}
+
+    .pf-hero{padding:0 20px!important;min-height:92vh!important;}
+    .pf-hero-content{max-width:100%!important;}
+    .pf-hero-kicker{font-size:10px!important;letter-spacing:0.18em!important;margin-bottom:18px!important;}
+    .pf-hero-title{font-size:clamp(42px,16vw,80px)!important;line-height:0.9!important;}
+    .pf-hero-summary{margin-top:20px!important;max-width:100%!important;font-size:15px!important;}
+    .pf-hero-ctas{margin-top:26px!important;display:grid!important;grid-template-columns:1fr;gap:10px!important;}
+    .pf-hero-ctas .pf-cta{width:100%;justify-content:center;}
+    .pf-glyph{display:none!important;}
+    .pf-scroll-cue{display:none!important;}
+
+    .pf-marquee-text{font-size:11px!important;letter-spacing:0.14em!important;padding:12px 0!important;}
+    .pf-grid{grid-template-columns:1fr!important;gap:26px!important;}
+    .pf-project-item{grid-template-columns:1fr!important;gap:12px!important;padding:24px 10px!important;}
+    .pf-proj-arrow{display:none;}
+    .pf-contact{padding:84px 20px 50px!important;}
+    .pf-contact-links{grid-template-columns:1fr!important;max-width:100%!important;margin-top:36px!important;}
+    .pf-footer{margin-top:52px!important;}
+  }
+
+  @media (max-width: 480px){
+    .pf-section{padding:62px 14px;}
+    .pf-contact{padding:72px 14px 44px!important;}
+    .pf-contact-email{font-size:clamp(28px,12vw,44px);}
+  }
 </style>
 </helmet>
 
@@ -66,39 +102,39 @@
   <div class="pf-grain" data-grain></div>
 
   <!-- TOP STATUS BAR -->
-  <div style="position:fixed;top:0;left:0;right:0;z-index:80;display:flex;align-items:center;justify-content:space-between;padding:14px 22px;background:linear-gradient(#000,rgba(0,0,0,0.6),transparent);font-family:'Space Mono',monospace;font-size:11px;letter-spacing:0.22em;text-transform:uppercase;color:var(--muted);">
+  <div class="pf-topbar" style="position:fixed;top:0;left:0;right:0;z-index:80;display:flex;align-items:center;justify-content:space-between;padding:14px 22px;background:linear-gradient(#000,rgba(0,0,0,0.6),transparent);font-family:'Space Mono',monospace;font-size:11px;letter-spacing:0.22em;text-transform:uppercase;color:var(--muted);">
     <div style="display:flex;align-items:center;gap:8px;"><span style="width:6px;height:6px;border-radius:50%;background:var(--accent);display:inline-block;"></span><span style="color:#fff;">{{ brand.name }}</span><span style="color:var(--dim);">{{ brand.tagline }}</span></div>
-    <div id="pf-clock" style="color:var(--dim);">--:--:-- AEST</div>
+    <div id="pf-clock" class="pf-topbar-clock" style="color:var(--dim);">--:--:-- AEST</div>
     <div style="display:flex;align-items:center;gap:8px;"><span class="pf-anim-blink" style="width:6px;height:6px;border-radius:50%;background:#2ec36a;display:inline-block;"></span>{{ availabilityText }}</div>
   </div>
 
   <!-- SIDE NAV DOTS -->
-  <div style="position:fixed;right:20px;top:50%;transform:translateY(-50%);z-index:80;display:flex;flex-direction:column;gap:16px;align-items:center;">
+  <div class="pf-side-nav" style="position:fixed;right:20px;top:50%;transform:translateY(-50%);z-index:80;display:flex;flex-direction:column;gap:16px;align-items:center;">
     <sc-for list="{{ nav }}" as="n" hint-placeholder-count="6">
       <div class="pf-navdot" onClick="{{ n.go }}" title="{{ n.label }}" style="width:8px;height:8px;border-radius:50%;background:#333;cursor:pointer;transition:transform .2s,background .2s;" data-navdot="{{ n.id }}"></div>
     </sc-for>
   </div>
 
   <!-- ============ HERO ============ -->
-  <section id="home" data-screen-label="Hero" style="position:relative;min-height:100vh;display:flex;flex-direction:column;justify-content:center;padding:0 6vw;">
+  <section id="home" data-screen-label="Hero" class="pf-hero" style="position:relative;min-height:100vh;display:flex;flex-direction:column;justify-content:center;padding:0 6vw;">
     <!-- ambient dot field -->
     <div style="position:absolute;inset:0;background-image:radial-gradient(circle,rgba(255,255,255,0.07) 1px,transparent 1px);background-size:26px 26px;mask-image:radial-gradient(circle at 70% 40%,#000,transparent 75%);-webkit-mask-image:radial-gradient(circle at 70% 40%,#000,transparent 75%);"></div>
 
-    <div style="position:relative;z-index:2;max-width:1100px;">
-      <div style="display:flex;align-items:center;gap:14px;margin-bottom:26px;font-family:'Space Mono',monospace;font-size:12px;letter-spacing:0.28em;text-transform:uppercase;color:var(--muted);" data-reveal>
+    <div class="pf-hero-content" style="position:relative;z-index:2;max-width:1100px;">
+      <div class="pf-hero-kicker" style="display:flex;align-items:center;gap:14px;margin-bottom:26px;font-family:'Space Mono',monospace;font-size:12px;letter-spacing:0.28em;text-transform:uppercase;color:var(--muted);" data-reveal>
         <span style="width:34px;height:1px;background:var(--accent);display:inline-block;"></span>
         {{ hero.kicker }}
       </div>
 
-      <h1 style="font-family:'Doto',monospace;font-weight:900;font-size:clamp(56px,13vw,190px);line-height:0.82;letter-spacing:-0.01em;margin:0;" data-reveal>
+      <h1 class="pf-hero-title" style="font-family:'Doto',monospace;font-weight:900;font-size:clamp(56px,13vw,190px);line-height:0.82;letter-spacing:-0.01em;margin:0;" data-reveal>
         {{ hero.firstName }}<br><span style="color:transparent;-webkit-text-stroke:2px #fff;">{{ hero.lastName }}</span>
       </h1>
 
-      <p style="margin-top:30px;max-width:540px;font-size:clamp(15px,1.6vw,19px);line-height:1.55;color:#cfcfcf;font-weight:300;" data-reveal>
+      <p class="pf-hero-summary" style="margin-top:30px;max-width:540px;font-size:clamp(15px,1.6vw,19px);line-height:1.55;color:#cfcfcf;font-weight:300;" data-reveal>
         {{ hero.summary }}
       </p>
 
-      <div style="margin-top:40px;display:flex;flex-wrap:wrap;gap:14px;align-items:center;" data-reveal>
+      <div class="pf-hero-ctas" style="margin-top:40px;display:flex;flex-wrap:wrap;gap:14px;align-items:center;" data-reveal>
         <div class="pf-cta" onClick="{{ goContact }}" style="display:flex;align-items:center;gap:10px;padding:14px 22px;border:1px solid #fff;border-radius:40px;font-size:13px;letter-spacing:0.12em;text-transform:uppercase;cursor:pointer;transition:all .25s;font-weight:500;">
           <span class="pf-cta-dot" style="width:7px;height:7px;border-radius:50%;background:var(--accent);transition:background .25s;"></span> {{ hero.primaryCta }}
         </div>
@@ -109,7 +145,7 @@
     </div>
 
     <!-- glyph matrix -->
-    <div style="position:absolute;right:6vw;top:50%;transform:translateY(-50%);z-index:1;display:flex;flex-direction:column;gap:7px;opacity:0.9;" data-glyph>
+    <div class="pf-glyph" style="position:absolute;right:6vw;top:50%;transform:translateY(-50%);z-index:1;display:flex;flex-direction:column;gap:7px;opacity:0.9;" data-glyph>
       <sc-for list="{{ glyphRows }}" as="row" hint-placeholder-count="7">
         <div style="display:flex;gap:7px;">
           <sc-for list="{{ row }}" as="d" hint-placeholder-count="33">
@@ -120,7 +156,7 @@
     </div>
 
     <!-- scroll cue -->
-    <div style="position:absolute;bottom:26px;left:6vw;display:flex;align-items:center;gap:12px;font-family:'Space Mono',monospace;font-size:11px;letter-spacing:0.22em;color:var(--dim);">
+    <div class="pf-scroll-cue" style="position:absolute;bottom:26px;left:6vw;display:flex;align-items:center;gap:12px;font-family:'Space Mono',monospace;font-size:11px;letter-spacing:0.22em;color:var(--dim);">
       <div style="width:18px;height:30px;border:1px solid var(--line);border-radius:10px;position:relative;"><span class="pf-anim-scroll-cue" style="position:absolute;left:50%;top:6px;width:3px;height:3px;border-radius:50%;background:var(--accent);transform:translateX(-50%);"></span></div>
       SCROLL
     </div>
@@ -130,7 +166,7 @@
   <div style="border-top:1px solid var(--line);border-bottom:1px solid var(--line);overflow:hidden;white-space:nowrap;background:#050505;">
     <div class="pf-anim-marquee">
       <sc-for list="{{ marqueeRows }}" as="row" hint-placeholder-count="2">
-        <span style="font-family:'Space Mono',monospace;font-size:13px;letter-spacing:0.2em;text-transform:uppercase;color:var(--muted);padding:16px 0;">
+        <span class="pf-marquee-text" style="font-family:'Space Mono',monospace;font-size:13px;letter-spacing:0.2em;text-transform:uppercase;color:var(--muted);padding:16px 0;">
           <sc-for list="{{ row }}" as="token" hint-placeholder-count="8">
             &nbsp;&nbsp;{{ token }}&nbsp;&nbsp;<span style="color:var(--accent);">●</span>
           </sc-for>
@@ -146,7 +182,7 @@
       <span class="pf-section-num">{{ sectionById.about.num }}</span>
       <h2 class="pf-section-title">{{ sectionById.about.title }}</h2>
     </div>
-    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:50px;align-items:start;">
+    <div class="pf-grid" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:50px;align-items:start;">
       <div data-reveal>
         <p style="font-size:clamp(18px,2.4vw,28px);line-height:1.5;font-weight:300;letter-spacing:-0.01em;">{{ about.lead }}</p>
         <p style="margin-top:24px;max-width:560px;font-size:16px;line-height:1.7;color:#bdbdbd;font-weight:300;">{{ about.body }}</p>
@@ -169,7 +205,7 @@
       <span class="pf-section-num">{{ sectionById.skills.num }}</span>
       <h2 class="pf-section-title">{{ sectionById.skills.title }}</h2>
     </div>
-    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:40px;">
+    <div class="pf-grid" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:40px;">
       <sc-for list="{{ skillGroups }}" as="g" hint-placeholder-count="3">
         <div data-reveal>
           <div class="pf-block-tag" style="margin-bottom:20px;">{{ g.title }}</div>
@@ -191,7 +227,7 @@
     </div>
     <div style="border-top:1px solid var(--line);">
       <sc-for list="{{ projects }}" as="p" hint-placeholder-count="4">
-        <a href="{{ p.href }}" target="_blank" rel="noopener noreferrer" class="pf-proj" data-reveal style="text-decoration:none;color:inherit;display:grid;grid-template-columns:80px 1fr auto;gap:24px;align-items:center;padding:34px 18px;border-bottom:1px solid var(--line);transition:background .3s;">
+        <a href="{{ p.href }}" target="_blank" rel="noopener noreferrer" class="pf-proj pf-project-item" data-reveal style="text-decoration:none;color:inherit;display:grid;grid-template-columns:80px 1fr auto;gap:24px;align-items:center;padding:34px 18px;border-bottom:1px solid var(--line);transition:background .3s;">
           <div class="pf-proj-num" style="font-family:'Doto',monospace;font-weight:700;font-size:30px;color:var(--dim);transition:color .3s;">{{ p.num }}</div>
           <div>
             <div style="display:flex;align-items:center;gap:14px;flex-wrap:wrap;">
@@ -213,7 +249,7 @@
       <span class="pf-section-num">{{ sectionById.path.num }}</span>
       <h2 class="pf-section-title">{{ sectionById.path.title }}</h2>
     </div>
-    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:60px;">
+    <div class="pf-grid" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:60px;">
       <div data-reveal>
         <div class="pf-block-tag">Experience</div>
         <sc-for list="{{ experience }}" as="e" hint-placeholder-count="3">
@@ -241,7 +277,7 @@
   </section>
 
   <!-- ============ CONTACT ============ -->
-  <section id="contact" data-screen-label="Contact" style="padding:120px 6vw 60px;">
+  <section id="contact" data-screen-label="Contact" class="pf-contact" style="padding:120px 6vw 60px;">
     <div class="pf-section-head pf-section-head--contact" data-reveal>
       <span class="pf-section-num">{{ sectionById.contact.num }}</span>
       <h2 class="pf-section-title">{{ sectionById.contact.title }}</h2>
@@ -250,7 +286,7 @@
       <div class="pf-contact-email">{{ contact.emailUser }}<br>{{ contact.emailDomain }}</div>
     </a>
 
-    <div style="margin-top:60px;display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:14px;max-width:760px;" data-reveal>
+    <div class="pf-contact-links" style="margin-top:60px;display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:14px;max-width:760px;" data-reveal>
       <sc-for list="{{ links }}" as="l" hint-placeholder-count="3">
         <a href="{{ l.href }}" target="_blank" class="pf-link" style="text-decoration:none;color:var(--muted);display:flex;align-items:center;gap:12px;padding:18px 20px;border:1px solid var(--line);border-radius:14px;">
           <span class="pf-link-dot" style="width:7px;height:7px;border-radius:50%;background:#2ec36a;transition:background .25s;"></span>
@@ -260,7 +296,7 @@
       </sc-for>
     </div>
 
-    <div style="margin-top:80px;padding-top:24px;border-top:1px solid var(--line);display:flex;flex-wrap:wrap;justify-content:space-between;gap:14px;font-family:'Space Mono',monospace;font-size:11px;letter-spacing:0.16em;text-transform:uppercase;color:var(--dim);">
+    <div class="pf-footer" style="margin-top:80px;padding-top:24px;border-top:1px solid var(--line);display:flex;flex-wrap:wrap;justify-content:space-between;gap:14px;font-family:'Space Mono',monospace;font-size:11px;letter-spacing:0.16em;text-transform:uppercase;color:var(--dim);">
       <span>© {{ year }} {{ footer.owner }}</span>
       <span>{{ footer.middle }}</span>
       <span style="color:var(--muted);">{{ footer.status }}</span>
