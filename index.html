@@ -41,7 +41,8 @@
 
   /* Animation utility classes */
   .pf-anim-blink{animation:pf-blink 2s infinite;}
-  .pf-anim-marquee{display:inline-flex;animation:pf-marquee 28s linear infinite;will-change:transform;}
+  .pf-anim-marquee{display:flex;width:max-content;animation:pf-marquee 28s linear infinite;will-change:transform;}
+  .pf-marquee-text{display:inline-flex;flex:0 0 auto;white-space:nowrap;}
   .pf-anim-scroll-cue{animation:pf-scroll-cue 1.8s infinite;}
 
   /* Component styles */
