@@ -25,7 +25,7 @@
   @keyframes pf-blink{0%,49%{opacity:1;}50%,100%{opacity:0.15;}}
   @keyframes pf-pulse{0%,100%{opacity:0.18;transform:scale(0.85);}50%{opacity:1;transform:scale(1);}}
   @keyframes pf-reveal{from{opacity:0;transform:translateY(26px);}to{opacity:1;transform:translateY(0);}}
-  @keyframes pf-marquee{from{transform:translateX(0);}to{transform:translateX(-50%);}}
+  @keyframes pf-marquee{from{-webkit-transform:translate3d(0,0,0);transform:translate3d(0,0,0);}to{-webkit-transform:translate3d(-50%,0,0);transform:translate3d(-50%,0,0);}}
   @keyframes pf-float{0%,100%{transform:translateY(0);}50%{transform:translateY(-8px);}}
   @keyframes pf-spin{to{transform:rotate(360deg);}}
   @keyframes pf-scroll-cue{0%{transform:translateY(0);opacity:0;}30%{opacity:1;}60%{opacity:1;}100%{transform:translateY(14px);opacity:0;}}
@@ -41,7 +41,7 @@
 
   /* Animation utility classes */
   .pf-anim-blink{animation:pf-blink 2s infinite;}
-  .pf-anim-marquee{display:flex;width:max-content;animation:pf-marquee 28s linear infinite;will-change:transform;}
+  .pf-anim-marquee{display:-webkit-flex;display:flex;width:-webkit-max-content;width:-moz-max-content;width:max-content;-webkit-animation:pf-marquee 28s linear infinite;animation:pf-marquee 28s linear infinite;will-change:transform;-webkit-backface-visibility:hidden;backface-visibility:hidden;-webkit-perspective:1000px;perspective:1000px;}
   .pf-marquee-text{display:inline-flex;flex:0 0 auto;white-space:nowrap;}
   .pf-anim-scroll-cue{animation:pf-scroll-cue 1.8s infinite;}
 
