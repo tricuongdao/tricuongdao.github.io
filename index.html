@@ -1346,10 +1346,9 @@
 </header>
 
 <nav class="index-strip" aria-label="Scorecard sections">
-    <a href="#right-now">Right now</a>
     <a href="#the-work">The work</a>
     <a href="#toolkit">Toolkit</a>
-    <a href="#the-other-job">The other job</a>
+    <a href="#experience">Work experience</a>
     <a href="#contact">Contact</a>
 </nav>
 
@@ -1366,7 +1365,8 @@
 
             <p class="summary" data-load>
                 I study Information Technology at <b>QUT</b> and build full-stack web
-                apps in JavaScript and Python. Weekdays I draft legal
+                apps in JavaScript and Python. Since August 2026 I have been working
+                as a freelance web developer, and on weekdays I draft legal
                 documents and keep a Brisbane law firm's deadlines and billing straight.
                 I write code the way I keep those files: checked before it goes out.
                 I speak English and Vietnamese.
@@ -1420,44 +1420,6 @@
                     <dd>2027</dd>
                 </dl>
             </section>
-        </div>
-    </section>
-
-    <section class="sect" id="right-now" aria-labelledby="h-right-now">
-            <h2 class="head" id="h-right-now" data-ruled>Right now<span class="note">Both ongoing</span></h2>
-            <div class="tbl-wrap">
-            <table class="card">
-                <caption>Current commitments, and how long each has been running.</caption>
-                <thead>
-                <tr>
-                    <th scope="col">#</th>
-                    <th scope="col">Commitment</th>
-                    <th scope="col" class="c-when">From</th>
-                    <th scope="col" class="c-when">To</th>
-                    <th scope="col">Status</th>
-                </tr>
-                </thead>
-                <tbody data-stagger>
-                <tr>
-                    <td class="pos">1</td>
-                    <td class="what">Bachelor of Information Technology
-                        <small>Queensland University of Technology</small>
-                        <span class="when-inline">2025 &rarr; 2027</span></td>
-                    <td class="when">2025</td>
-                    <td class="when">2027</td>
-                    <td class="stat"><span class="no">Ongoing</span></td>
-                </tr>
-                <tr>
-                    <td class="pos">2</td>
-                    <td class="what">Legal Secretary
-                        <small>T Lawyers &middot; Inala, Brisbane QLD</small>
-                        <span class="when-inline">Feb 2025 &rarr; present</span></td>
-                    <td class="when">Feb 2025</td>
-                    <td class="when">present</td>
-                    <td class="stat"><span class="no">Ongoing</span></td>
-                </tr>
-                </tbody>
-            </table>
         </div>
     </section>
 
@@ -1561,10 +1523,38 @@
         </div>
     </section>
 
-    <section class="sect extras on-green" id="the-other-job" aria-labelledby="h-the-other-job">
-            <h2 class="head" id="h-the-other-job" data-ruled>The other job<span class="note">Brisbane, since February 2025</span>
+    <section class="sect extras on-green" id="experience" aria-labelledby="h-experience">
+            <h2 class="head" id="h-experience" data-ruled>Work experience<span class="note">Brisbane &middot; ongoing</span>
             </h2>
         <div class="pad">
+            <div class="extras-grid">
+                <div data-rise>
+                    <p class="extras-lede"><span id="tenure-freelance">One month</span> of building and shipping web
+                        apps for clients, from first brief to live deployment.</p>
+                    <p class="extras-meta">
+                        Freelance Web Developer<br>
+                        Self-employed<br>
+                        Brisbane QLD<br>
+                        Aug 2026 &rarr; present
+                    </p>
+                </div>
+                <ul class="byes" data-stagger>
+                    <li><span class="k">Full-stack</span><span>Web apps built end to end, from database schema to deployed front end.</span>
+                    </li>
+                    <li><span class="k">Clients</span><span>Scoping, quoting and delivering directly with clients, kept to brief.</span>
+                    </li>
+                    <li><span
+                            class="k">Stacks</span><span>JavaScript and Python, with React, Node, Express and MongoDB.</span>
+                    </li>
+                    <li><span class="k">Deployment</span><span>Apps shipped to the cloud and handed over, live and documented.</span>
+                    </li>
+                    <li><span class="k">Quality</span><span>Responsive layouts, tested features and code checked before it goes out.</span>
+                    </li>
+                    <li><span class="k">Comms</span><span>Clear timelines, regular updates and no surprises at invoicing.</span>
+                    </li>
+                </ul>
+            </div>
+
             <div class="extras-grid">
                 <div data-rise>
                     <p class="extras-lede"><span id="tenure">Eighteen months</span> in a working law firm, where a
@@ -1661,25 +1651,28 @@
         var yr = document.getElementById('yr');
         if (yr) yr.textContent = new Date().getFullYear();
 
-        var tenure = document.getElementById('tenure');
-        if (tenure) {
-            var START = new Date(2025, 1, 1);
-            var now = new Date();
-            var months = (now.getFullYear() - START.getFullYear()) * 12 +
-                (now.getMonth() - START.getMonth());
-            var WORDS = ['', 'One', 'Two', 'Three', 'Four', 'Five', 'Six', 'Seven', 'Eight', 'Nine', 'Ten',
-                'Eleven', 'Twelve', 'Thirteen', 'Fourteen', 'Fifteen', 'Sixteen', 'Seventeen',
-                'Eighteen', 'Nineteen', 'Twenty', 'Twenty-one', 'Twenty-two', 'Twenty-three'];
-            var word = function (n) {
-                return WORDS[n] || String(n);
-            };
+        var tenureEls = [
+            {el: document.getElementById('tenure'), start: new Date(2025, 1, 1)},
+            {el: document.getElementById('tenure-freelance'), start: new Date(2026, 7, 1)}
+        ];
+        var WORDS = ['', 'One', 'Two', 'Three', 'Four', 'Five', 'Six', 'Seven', 'Eight', 'Nine', 'Ten',
+            'Eleven', 'Twelve', 'Thirteen', 'Fourteen', 'Fifteen', 'Sixteen', 'Seventeen',
+            'Eighteen', 'Nineteen', 'Twenty', 'Twenty-one', 'Twenty-two', 'Twenty-three'];
+        var word = function (n) {
+            return WORDS[n] || String(n);
+        };
+        var now = new Date();
+        tenureEls.forEach(function (t) {
+            if (!t.el) return;
+            var months = (now.getFullYear() - t.start.getFullYear()) * 12 +
+                (now.getMonth() - t.start.getMonth());
             if (months >= 24) {
                 var years = Math.floor(months / 12);
-                tenure.textContent = word(years) + ' years';
+                t.el.textContent = word(years) + ' years';
             } else if (months >= 1) {
-                tenure.textContent = word(months) + ' month' + (months === 1 ? '' : 's');
+                t.el.textContent = word(months) + ' month' + (months === 1 ? '' : 's');
             }
-        }
+        });
 
         if (document.documentElement.classList.contains('anim')) {
             var targets = document.querySelectorAll('[data-ruled],[data-rise],[data-stagger]');
